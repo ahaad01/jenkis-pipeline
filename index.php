@@ -22,7 +22,7 @@
     <?php
     // Database connection
     $servername = "localhost";
-    $username = "ahad";
+    $username = "hilal";
     $password = "1234";
     $dbname = "testingdb";
 
