@@ -7,9 +7,9 @@ pipeline {
                 // Checkout code from GitHub repository using provided credentials
                 script {
                     checkout([$class: 'GitSCM',
-                              branches: [[name: 'main']], 
+                              branches: [[name: 'main']],
                               userRemoteConfigs: [[url: 'https://github.com/ahaad01/jenkis-pipeline.git']],
-                              credentialsId: 'testing' 
+                              credentialsId: 'testing'
                             ])
                 }
             }
@@ -32,7 +32,8 @@ pipeline {
                 // Run SonarScanner for code analysis
                 script {
                     def scannerHome = tool 'SonarScanner';
-                    withSonarQubeEnv('SonarQube') {
+                    // Update the SonarQube installation name to match the one configured in Jenkins
+                    withSonarQubeEnv('jenkins-test') {
                         sh "${scannerHome}/bin/sonar-scanner"
                     }
                 }
