@@ -4,12 +4,12 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                // Checkout code from GitHub repository using provided credentials
                 script {
-                    // Checkout code from GitHub repository using provided credentials
                     checkout([$class: 'GitSCM',
-                              branches: [[name: 'main']], // Specify the branch here
+                              branches: [[name: 'main']], 
                               userRemoteConfigs: [[url: 'https://github.com/ahaad01/jenkis-pipeline.git']],
-                              credentialsId: 'testing' // Specify the credentials ID here
+                              credentialsId: 'testing' 
                             ])
                 }
             }
@@ -17,9 +17,9 @@ pipeline {
         
         stage('Update Server') {
             steps {
+                // Pull latest changes from the repository in the specified directory
                 script {
-                    // Pull latest changes from the repository in the specified directory
-                    sh 'cd /var/www/html/testingdb && git fetch origin && git merge origin/main &&  git pull origin main'
+                    sh 'cd /var/www/html/testingdb && git fetch origin && git merge origin/main && git pull origin main'
                     
                     // Restart Nginx
                     sh 'sudo systemctl restart nginx'
@@ -29,15 +29,11 @@ pipeline {
         
         stage('SonarQube Analysis') {
             steps {
-                node {
-                    stage('SCM') {
-                        checkout scm
-                    }
-                    stage('SonarQube Analysis') {
-                        def scannerHome = tool 'SonarScanner';
-                        withSonarQubeEnv() {
-                            sh "${scannerHome}/bin/sonar-scanner"
-                        }
+                // Run SonarScanner for code analysis
+                script {
+                    def scannerHome = tool 'SonarScanner';
+                    withSonarQubeEnv('SonarQube') {
+                        sh "${scannerHome}/bin/sonar-scanner"
                     }
                 }
             }
